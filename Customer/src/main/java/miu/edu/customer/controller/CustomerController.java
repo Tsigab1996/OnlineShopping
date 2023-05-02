@@ -13,7 +13,7 @@ public class CustomerController {
     private String message;
 
     @GetMapping("/message")
-    public String showMesssage(){
+    public String showMesssage() {
         return message;
     }
 }
