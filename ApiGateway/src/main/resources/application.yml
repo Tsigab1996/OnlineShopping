@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: ApiGateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: customer
+          uri: http://localhost:8889/
+          predicates:
+              - Path=/api/v1/customers/**
+        - id: product
+          uri: http://localhost:8890/
+          predicates:
+              - Path=/api/v1/products/**
+server:
+  port: 8891
+
