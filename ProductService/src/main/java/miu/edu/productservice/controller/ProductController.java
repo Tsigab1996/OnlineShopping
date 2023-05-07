@@ -4,12 +4,18 @@ import java.util.List;
 
 import miu.edu.productservice.domain.ProductDTO;
 import miu.edu.productservice.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/products")
 public class ProductController {
+
+   @Autowired
+   private CustomerFeignClient customerFeignClient;
 
     private final ProductService productService;
     public ProductController(ProductService productService) {
@@ -27,7 +33,7 @@ public class ProductController {
 
     @GetMapping("/message")
     public String showMessage() {
-        return message;
+        return  message + customerFeignClient.getCustomerID();
     }
 
     @GetMapping("/get/{id}")
@@ -53,7 +59,21 @@ public class ProductController {
     @PostMapping("/update")
     public ProductDTO updateProduct(@RequestBody ProductDTO productDTO) {
         return productService.updateProduct(productDTO);
+
     }
+
+
+
+    @FeignClient(name ="Customer")
+   // @LoadBalancerClient
+    public interface CustomerFeignClient {
+        @GetMapping("/api/v1/customers/load")
+        int getCustomerID();
+    }
+
+
+
+
 
 
 

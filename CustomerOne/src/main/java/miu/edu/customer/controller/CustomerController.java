@@ -23,8 +23,6 @@ public class CustomerController {
 
 
 
-
-
     @GetMapping("/message")
     public String showMesssage() {
         return message;
@@ -56,7 +54,8 @@ public class CustomerController {
     }
 
     @GetMapping("/load")
+
     public int getCustomerID(){
-        return 10;
+        return 5;
     }
 }
