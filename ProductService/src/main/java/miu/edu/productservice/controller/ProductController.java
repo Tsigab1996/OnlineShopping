@@ -2,6 +2,7 @@ package miu.edu.productservice.controller;
 
 import java.util.List;
 
+import miu.edu.productservice.domain.Product;
 import miu.edu.productservice.domain.ProductDTO;
 import miu.edu.productservice.feignClient.CustomerFeignClient;
 import miu.edu.productservice.service.ProductService;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/products")
 public class ProductController {
 
+
    @Autowired
    private CustomerFeignClient customerFeignClient;
+
+
 
     private final ProductService productService;
     public ProductController(ProductService productService) {
@@ -40,6 +44,7 @@ public class ProductController {
 
     @GetMapping("/get/{id}")
     public ProductDTO getProduct(@PathVariable int id) {
+
         return productService.getProduct(id);
     }
 
