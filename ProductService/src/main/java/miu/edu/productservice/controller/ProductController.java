@@ -2,6 +2,7 @@ package miu.edu.productservice.controller;
 
 import java.util.List;
 
+import miu.edu.productservice.domain.Product;
 import miu.edu.productservice.domain.ProductDTO;
 import miu.edu.productservice.feignClient.CustomerFeignClient;
 import miu.edu.productservice.service.ProductService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +21,9 @@ public class ProductController {
    private CustomerFeignClient customerFeignClient;
 
     private final ProductService productService;
+
+    @Autowired
+    private KafkaTemplate<String, Product> kafkaTemplate;
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
