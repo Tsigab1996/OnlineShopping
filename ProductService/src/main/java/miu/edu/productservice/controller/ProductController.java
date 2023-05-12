@@ -33,6 +33,7 @@ public class ProductController {
 
     @GetMapping("/message")
     public String showMessage() {
+
         return  message + customerFeignClient.getCustomerID();
     }
 
