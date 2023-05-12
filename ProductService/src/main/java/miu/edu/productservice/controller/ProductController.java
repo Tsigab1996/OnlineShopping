@@ -3,6 +3,7 @@ package miu.edu.productservice.controller;
 import java.util.List;
 
 import miu.edu.productservice.domain.ProductDTO;
+import miu.edu.productservice.feignClient.CustomerFeignClient;
 import miu.edu.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,19 +64,11 @@ public class ProductController {
 
     }
 
-
-
-    @FeignClient(name ="Customer")
-   // @LoadBalancerClient
-    public interface CustomerFeignClient {
-        @GetMapping("/api/v1/customers/load")
-        int getCustomerID();
-    }
-
-
-
-
-
-
+//    @FeignClient(name ="Customer")
+//    // @LoadBalancerClient
+//    public interface CustomerFeignClient {
+//        @GetMapping("/api/v1/customers/load")
+//        int getCustomerID();
+//    }
 
 }
