@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/products")
 public class ProductController {
 
-   @Autowired
-   private CustomerFeignClient customerFeignClient;
+
+    @Autowired
+    private CustomerFeignClient customerFeignClient;
 
     private final ProductService productService;
 
     @Autowired
-    private KafkaTemplate<String, Product> kafkaTemplate;
+    private KafkaTemplate<String, ProductDTO> kafkaTemplate;
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -36,15 +38,18 @@ public class ProductController {
     private String message;
 
 
-
     @GetMapping("/message")
     public String showMessage() {
-        return  message + customerFeignClient.getCustomerID();
+
+        return message + customerFeignClient.getCustomerID();
     }
 
     @GetMapping("/get/{id}")
     public ProductDTO getProduct(@PathVariable int id) {
-        return productService.getProduct(id);
+        ProductDTO product = productService.getProduct(id);
+        kafkaTemplate.send("topicA", product);
+        System.out.println("Product sent");
+        return product;
     }
 
     @GetMapping("/get")
