@@ -1,0 +1,14 @@
+server:
+  port: 1991
+
+spring:
+  application:
+    name: ELK
+
+logging:
+  file:c//Users/ELK/logs/ELK.log
+
+
+
+
+
