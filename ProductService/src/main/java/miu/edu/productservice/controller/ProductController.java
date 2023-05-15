@@ -2,9 +2,14 @@ package miu.edu.productservice.controller;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.discovery.converters.Auto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import miu.edu.productservice.domain.Product;
 import miu.edu.productservice.domain.ProductDTO;
 import miu.edu.productservice.feignClient.CustomerFeignClient;
+import miu.edu.productservice.integration.Sender;
 import miu.edu.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +28,11 @@ public class ProductController {
 
     private final ProductService productService;
 
+//    @Autowired
+//    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
-    private KafkaTemplate<String, ProductDTO> kafkaTemplate;
+    private Sender sender;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -39,15 +47,23 @@ public class ProductController {
 
 
     @GetMapping("/message")
+    @CircuitBreaker(name = "ProductController", fallbackMethod = "showMessageFallBackMethod")
     public String showMessage() {
-
         return message + customerFeignClient.getCustomerID();
     }
 
+    public String showMessageFallBackMethod(Exception exception){
+        System.out.println("Fall back method called!");
+        return exception.getMessage();
+    }
+
     @GetMapping("/get/{id}")
-    public ProductDTO getProduct(@PathVariable int id) {
+    public ProductDTO getProduct(@PathVariable int id) throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO product = productService.getProduct(id);
-        kafkaTemplate.send("topicA", product);
+        sender.send("topicA", product.toString());
+//        String productString = objectMapper.writeValueAsString(product);
+//        kafkaTemplate.send("topicA", productString);
         System.out.println("Product sent");
         return product;
     }
